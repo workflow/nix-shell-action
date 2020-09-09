@@ -1,17 +1,42 @@
 import * as core from '@actions/core'
-import {wait} from './wait'
+import {execFileSync} from 'child_process'
+import {writeFileSync} from 'fs'
 
-async function run(): Promise<void> {
+function run(): void {
   try {
-    const ms: string = core.getInput('milliseconds')
-    core.debug(`Waiting ${ms} milliseconds ...`) // debug is only output if you set the secret `ACTIONS_RUNNER_DEBUG` to true
+    const interpreter: string = core.getInput('interpreter')
+    const packages: string = core.getInput('packages')
+    const script: string = core.getInput('script')
 
-    core.debug(new Date().toTimeString())
-    await wait(parseInt(ms, 10))
-    core.debug(new Date().toTimeString())
+    const nixWrapperPath = `${__dirname}/wrapper.sh`
+    const scriptPath = `${__dirname}/script.sh`
 
-    core.setOutput('time', new Date().toTimeString())
+    const wrappedPackages = packages
+      .split(',')
+      .map(pkg => `nixpkgs.${pkg}`)
+      .join(' ')
+
+    const nixWrapper = `
+set -euo pipefail
+
+echo ${wrappedPackages}
+nix run ${wrappedPackages} -c ${interpreter} ${scriptPath}
+      `
+
+    const wrappedScript = `
+set -euo pipefail
+
+${script}
+   `
+    writeFileSync(nixWrapperPath, nixWrapper, {mode: 0o755})
+    writeFileSync(scriptPath, wrappedScript, {mode: 0o755})
+
+    execFileSync(nixWrapperPath, {
+      stdio: 'inherit',
+      shell: 'bash'
+    })
   } catch (error) {
+    core.error(`Error ${error}, action may still succeed though`)
     core.setFailed(error.message)
   }
 }

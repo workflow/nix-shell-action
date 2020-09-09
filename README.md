@@ -1,101 +1,64 @@
-<p align="center">
-  <a href="https://github.com/actions/typescript-action/actions"><img alt="typescript-action status" src="https://github.com/actions/typescript-action/workflows/build-test/badge.svg"></a>
-</p>
+# nix-shell-action
 
-# Create a JavaScript Action using TypeScript
+<a href="https://github.com/workflow/nix-shell-action/actions"><img alt="nix-shell-action status" src="https://github.com/workflow/nix-shell-action/workflows/nix-shell-action-test/badge.svg"></a>
 
-Use this template to bootstrap the creation of a TypeScript action.:rocket:
+Run any command you like in a deterministic [Nix](https://nixos.org/nix/) shell on Linux and macOS.
 
-This template includes compilation support, tests, a validation workflow, publishing, and versioning guidance.  
+## Usage
 
-If you are new, there's also a simpler introduction.  See the [Hello World JavaScript Action](https://github.com/actions/hello-world-javascript-action)
-
-## Create an action from this template
-
-Click the `Use this Template` and provide the new repo details for your action
-
-## Code in Main
-
-Install the dependencies  
-```bash
-$ npm install
-```
-
-Build the typescript and package it for distribution
-```bash
-$ npm run build && npm run package
-```
-
-Run the tests :heavy_check_mark:  
-```bash
-$ npm test
-
- PASS  ./index.test.js
-  ✓ throws invalid number (3ms)
-  ✓ wait 500 ms (504ms)
-  ✓ test runs (95ms)
-
-...
-```
-
-## Change action.yml
-
-The action.yml contains defines the inputs and output for your action.
-
-Update the action.yml with your name, description, inputs and outputs for your action.
-
-See the [documentation](https://help.github.com/en/articles/metadata-syntax-for-github-actions)
-
-## Change the Code
-
-Most toolkit and CI/CD operations involve async operations so the action is run in an async function.
-
-```javascript
-import * as core from '@actions/core';
-...
-
-async function run() {
-  try { 
-      ...
-  } 
-  catch (error) {
-    core.setFailed(error.message);
-  }
-}
-
-run()
-```
-
-See the [toolkit documentation](https://github.com/actions/toolkit/blob/master/README.md#packages) for the various packages.
-
-## Publish to a distribution branch
-
-Actions are run from GitHub repos so we will checkin the packed dist folder. 
-
-Then run [ncc](https://github.com/zeit/ncc) and push the results:
-```bash
-$ npm run package
-$ git add dist
-$ git commit -a -m "prod dependencies"
-$ git push origin releases/v1
-```
-
-Your action is now published! :rocket: 
-
-See the [versioning documentation](https://github.com/actions/toolkit/blob/master/docs/action-versioning.md)
-
-## Validate
-
-You can now validate the action by referencing `./` in a workflow in your repo (see [test.yml](.github/workflows/test.yml))
+Create `.github/workflows/test.yml` in your repo with the following contents:
 
 ```yaml
-uses: ./
-with:
-  milliseconds: 1000
+name: "Test"
+on:
+  pull_request:
+  push:
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: cachix/install-nix-action@v10
+      with:
+        nix_path: nixpkgs=channel:nixos-unstable
+    - uses: workflow/nix-shell-action@v1
+      with:
+        packages: hello,docker
+        script: |
+          hello
+          docker --help
 ```
 
-See the [actions tab](https://github.com/actions/typescript-action/actions) for runs of this action! :rocket:
+You can also pass in environment variables:
 
-## Usage:
+```yaml
+    - uses: workflow/nix-shell-action@v1
+      env:
+        TRANSFORMER: bumblecat
+      with:
+        packages: hello,docker
+        script: |
+          hello $TRANSFORMER
+          docker --help
+```
 
-After testing you can [create a v1 tag](https://github.com/actions/toolkit/blob/master/docs/action-versioning.md) to reference the stable and latest V1 action
+For now, this action implicitly depends on having [Nix] installed and set up correctly, such as through the [install-nix-action] demonstrated in the examples above.
+
+See also [cachix-action](https://github.com/cachix/cachix-action) for a simple binary cache setup to speed up your builds and share binaries with developers.
+
+## Options `with: ...`
+
+- `interpreter`:  Interpreter to use in the nix shell shebang, defaults to `bash`. (This is passed to `nix run -c`, used to be `-i` in a nix shell shebang)
+
+- `packages`: Comma-separated list of packages to pre-install in your shell. Defaults to just `bash` 
+
+- `script`: The actual script to execute in your shell. Will be passed to the `interpreter`, which defaults to `bash`
+
+---
+
+## Hacking
+
+See https://github.com/actions/typescript-action
+
+[Nix]: https://nixos.org/nix/
+[install-nix-action]: https://github.com/marketplace/actions/install-nix 

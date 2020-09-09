@@ -1,4 +1,4 @@
-name: 'build-test'
+name: 'nix-shell-action-test'
 on: # rebuild any PRs and main branch changes
   pull_request:
   push:
@@ -11,6 +11,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Install Nix
+        uses: cachix/install-nix-action@v10
+        with:
+          nix_path: nixpkgs=channel:nixos-unstable
       - run: |
           npm install
       - run: |
@@ -19,6 +23,28 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: ./
+      - name: Install Nix
+        uses: cachix/install-nix-action@v10
         with:
-          milliseconds: 1000
+          nix_path: nixpkgs=channel:nixos-unstable
+      - name: Test Basic Bash Shell
+        uses: ./
+        with:
+          script: |
+            echo "test!"
+      - name: Test Bash Shell with Packages
+        uses: ./
+        with:
+          packages: hello,docker
+          script: |
+            hello
+            command -v docker
+      - name: Test Bash Shell with Enviroment
+        uses: ./
+        env:
+          FUTURE: now
+          ANSWER: 42
+        with:
+          script: |
+            echo The future is $FUTURE
+            [[ -z "${ANSWER}" ]] && exit 1 || exit 0

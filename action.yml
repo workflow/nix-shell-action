@@ -1,11 +1,21 @@
-name: 'Your name here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: 'Nix Shell'
+description: 'Run any command you like in a deterministic nix shell on Linux and macOS'
+author: '@workflow'
 inputs:
-  milliseconds: # change this
+  interpreter:
     required: true
-    description: 'input description here'
-    default: 'default value if applicable'
+    description: 'Interpreter to use in the nix shell shebang'
+    default: 'bash'
+  packages:
+    required: true
+    description: 'Comma separated list of packages that are to be available in your shell'
+    default: 'bash'
+  script:
+    required: true
+    description: 'The actual script to execute in the shell'
+branding:
+  color: 'blue'
+  icon: 'chevron-right'
 runs:
   using: 'node12'
   main: 'dist/index.js'
