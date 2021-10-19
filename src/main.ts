@@ -13,7 +13,7 @@ function run(): void {
 
     const wrappedPackages = packages
       .split(',')
-      .map(pkg => `nixpkgs.${pkg}`)
+      .map(pkg => `nixpkgs.${pkg.trim()}`)
       .join(' ')
 
     const nixWrapper = `
