@@ -14,20 +14,27 @@ function run(): void {
     const wrappedPackages = packages
       .split(',')
       .map(pkg => `nixpkgs.${pkg.trim()}`)
-      .join(' ')
+      .join(' ');
+
+    const flakeWrappedPackages = packages
+      .split(',')
+      .map(pkg => `nixpkgs#${pkg.trim()}`)
+      .join(' ');
 
     const nixWrapper = `
 set -euo pipefail
 
 echo ${wrappedPackages}
-nix run ${wrappedPackages} -c ${interpreter} ${scriptPath}
-      `
+nix run ${wrappedPackages} -c ${interpreter} ${scriptPath} ||
+nix --experimental-features 'nix-command flakes' shell ${flakeWrappedPackages} -c ${interpreter} ${scriptPath}
+      `;
 
     const wrappedScript = `
 set -euo pipefail
 
 ${script}
-   `
+   `;
+
     writeFileSync(nixWrapperPath, nixWrapper, {mode: 0o755})
     writeFileSync(scriptPath, wrappedScript, {mode: 0o755})
 
