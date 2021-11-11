@@ -41,11 +41,16 @@ function run() {
             .split(',')
             .map(pkg => `nixpkgs.${pkg.trim()}`)
             .join(' ');
+        const flakeWrappedPackages = packages
+            .split(',')
+            .map(pkg => `nixpkgs#${pkg.trim()}`)
+            .join(' ');
         const nixWrapper = `
 set -euo pipefail
 
 echo ${wrappedPackages}
-nix run ${wrappedPackages} -c ${interpreter} ${scriptPath}
+nix run ${wrappedPackages} -c ${interpreter} ${scriptPath} ||
+nix --experimental-features 'nix-command flakes' shell ${flakeWrappedPackages} -c ${interpreter} ${scriptPath}
       `;
         const wrappedScript = `
 set -euo pipefail
