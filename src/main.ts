@@ -14,12 +14,12 @@ function run(): void {
     const wrappedPackages = packages
       .split(',')
       .map(pkg => `nixpkgs.${pkg.trim()}`)
-      .join(' ');
+      .join(' ')
 
     const flakeWrappedPackages = packages
       .split(',')
       .map(pkg => `nixpkgs#${pkg.trim()}`)
-      .join(' ');
+      .join(' ')
 
     const nixWrapper = `
 set -euo pipefail
@@ -27,13 +27,13 @@ set -euo pipefail
 echo ${wrappedPackages}
 nix run ${wrappedPackages} -c ${interpreter} ${scriptPath} ||
 nix --experimental-features 'nix-command flakes' shell ${flakeWrappedPackages} -c ${interpreter} ${scriptPath}
-      `;
+      `
 
     const wrappedScript = `
 set -euo pipefail
 
 ${script}
-   `;
+   `
 
     writeFileSync(nixWrapperPath, nixWrapper, {mode: 0o755})
     writeFileSync(scriptPath, wrappedScript, {mode: 0o755})
@@ -43,8 +43,7 @@ ${script}
       shell: 'bash'
     })
   } catch (error) {
-    core.error(`Error ${error}, action may still succeed though`)
-    core.setFailed(error.message)
+    if (error instanceof Error) core.setFailed(error.message)
   }
 }
 
