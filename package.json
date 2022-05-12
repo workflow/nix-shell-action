@@ -26,7 +26,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@actions/core": "^1.7.0"
+    "@actions/core": "^1.8.0"
   },
   "devDependencies": {
     "@types/node": "^17.0.30",
