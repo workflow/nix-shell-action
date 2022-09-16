@@ -24,9 +24,24 @@ function run(): void {
     const nixWrapper = `
 set -euo pipefail
 
-echo ${wrappedPackages}
-nix run ${wrappedPackages} -c ${interpreter} ${scriptPath} ||
-nix --experimental-features 'nix-command flakes' shell ${flakeWrappedPackages} -c ${interpreter} ${scriptPath}
+verlte() {
+    [  "$1" = "$(echo -e "$1\n$2" | sort -V | head -n1)" ]
+}
+
+verlt() {
+    [ "$1" = "$2" ] && return 1 || verlte $1 $2
+}
+
+nix_version=$(nix --version | awk '{ print $3 }')
+
+if verlt $nix_version 2.4
+then
+  # before nix 2.4: nix run
+  nix run ${wrappedPackages} -c ${interpreter} ${scriptPath}
+else
+  # nix 2.4 and later: nix shell
+  nix --experimental-features 'nix-command flakes' shell ${flakeWrappedPackages} -c ${interpreter} ${scriptPath} 
+fi
       `
 
     const wrappedScript = `
