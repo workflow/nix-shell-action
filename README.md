@@ -17,11 +17,11 @@ jobs:
   tests:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - uses: cachix/install-nix-action@v10
+    - uses: actions/checkout@v3
+    - uses: cachix/install-nix-action@v15
       with:
         nix_path: nixpkgs=channel:nixos-unstable
-    - uses: workflow/nix-shell-action@v1
+    - uses: workflow/nix-shell-action@v3
       with:
         packages: hello,docker
         script: |
@@ -32,7 +32,7 @@ jobs:
 You can also pass in environment variables:
 
 ```yaml
-    - uses: workflow/nix-shell-action@v1
+    - uses: workflow/nix-shell-action@v3
       env:
         TRANSFORMER: bumblecat
       with:
@@ -53,6 +53,31 @@ See also [cachix-action](https://github.com/cachix/cachix-action) for a simple b
 - `packages`: Comma-separated list of packages to pre-install in your shell. Defaults to just `bash` 
 
 - `script`: The actual script to execute in your shell. Will be passed to the `interpreter`, which defaults to `bash`
+
+## FAQ: Passing a Github Token against Rate Limits
+
+```yaml
+name: "Test"
+on:
+  pull_request:
+  push:
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: cachix/install-nix-action@v15
+      with:
+        nix_path: nixpkgs=channel:nixos-unstable
+        extra_nix_config: |
+          access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+    - uses: workflow/nix-shell-action@v3
+      with:
+        packages: hello,docker
+        script: |
+          hello
+          docker --help
+```
 
 ---
 
