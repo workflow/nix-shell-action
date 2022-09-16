@@ -16,7 +16,7 @@ jobs:
         with:
           nix_path: nixpkgs=channel:nixpkgs-unstable
       - run: |
-          npm install
+          npm install --legacy-peer-deps
       - run: |
           npm run all
   test-latest-nix:
