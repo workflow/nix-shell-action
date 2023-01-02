@@ -6,6 +6,7 @@ function run(): void {
   try {
     const interpreter: string = core.getInput('interpreter')
     const packages: string = core.getInput('packages')
+    const flakes: string = core.getInput('flakes')
     const script: string = core.getInput('script')
 
     const nixWrapperPath = `${__dirname}/wrapper.sh`
@@ -16,10 +17,12 @@ function run(): void {
       .map(pkg => `nixpkgs.${pkg.trim()}`)
       .join(' ')
 
-    const flakeWrappedPackages = packages
-      .split(',')
-      .map(pkg => `nixpkgs#${pkg.trim()}`)
-      .join(' ')
+    const flakeWrappedPackages =
+      flakes.split(',').join(' ') ||
+      packages
+        .split(',')
+        .map(pkg => `nixpkgs#${pkg.trim()}`)
+        .join(' ')
 
     const nixWrapper = `
 set -euo pipefail
@@ -40,7 +43,7 @@ then
   nix run ${wrappedPackages} -c ${interpreter} ${scriptPath}
 else
   # nix 2.4 and later: nix shell
-  nix --experimental-features 'nix-command flakes' shell ${flakeWrappedPackages} -c ${interpreter} ${scriptPath} 
+  nix --experimental-features 'nix-command flakes' shell ${flakeWrappedPackages} -c ${interpreter} ${scriptPath}
 fi
       `
 
