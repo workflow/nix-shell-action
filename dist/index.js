@@ -37,6 +37,7 @@ function run() {
     try {
         const interpreter = core.getInput('interpreter');
         const packages = core.getInput('packages');
+        const flakes = core.getInput('flakes');
         const script = core.getInput('script');
         const nixWrapperPath = __nccwpck_require__.ab + "wrapper.sh";
         const scriptPath = __nccwpck_require__.ab + "script.sh";
@@ -44,10 +45,11 @@ function run() {
             .split(',')
             .map(pkg => `nixpkgs.${pkg.trim()}`)
             .join(' ');
-        const flakeWrappedPackages = packages
-            .split(',')
-            .map(pkg => `nixpkgs#${pkg.trim()}`)
-            .join(' ');
+        const flakeWrappedPackages = flakes.split(',').join(' ') ||
+            packages
+                .split(',')
+                .map(pkg => `nixpkgs#${pkg.trim()}`)
+                .join(' ');
         const nixWrapper = `
 set -euo pipefail
 
@@ -67,7 +69,7 @@ then
   nix run ${wrappedPackages} -c ${interpreter} ${scriptPath}
 else
   # nix 2.4 and later: nix shell
-  nix --experimental-features 'nix-command flakes' shell ${flakeWrappedPackages} -c ${interpreter} ${scriptPath} 
+  nix --experimental-features 'nix-command flakes' shell ${flakeWrappedPackages} -c ${interpreter} ${scriptPath}
 fi
       `;
         const wrappedScript = `

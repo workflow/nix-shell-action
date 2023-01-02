@@ -46,6 +46,35 @@ For now, this action implicitly depends on having [Nix] installed and set up cor
 
 See also [cachix-action](https://github.com/cachix/cachix-action) for a simple binary cache setup to speed up your builds and share binaries with developers.
 
+## Use with Flakes
+Instead of specifying packages, you can use `flakes` to specify fully qualified flakes to be available in your script.
+This can be used for both local flakes in a `flake.nix` in your repo, as well as external flakes.
+
+```yaml
+name: "Test"
+on:
+  pull_request:
+  push:
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Nix
+        uses: cachix/install-nix-action@v18
+        with:
+          extra_nix_config: |
+            access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+      - uses: workflow/nix-shell-action@v3
+        with:
+          flakes: .#hello,nixpkgs#docker
+          script: |
+            # Runs hello from a local flake.nix
+            hello
+            # Uses docker from the nixpkgs registry (see https://raw.githubusercontent.com/NixOS/flake-registry/master/flake-registry.json)
+            command -v docker
+```
+
 ## Options `with: ...`
 
 - `interpreter`:  Interpreter to use in the nix shell shebang, defaults to `bash`. (This is passed to `nix run -c`, used to be `-i` in a nix shell shebang)
