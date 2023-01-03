@@ -105,3 +105,22 @@ jobs:
           script: |
             hello
             command -v docker
+
+  test-local-flake-in-working-directory:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Nix
+        uses: cachix/install-nix-action@v18
+        with:
+          extra_nix_config: |
+            access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+      - name: Test Bash Shell with Local and External Flakes
+        uses: ./
+        with:
+          flakes: .#cowsay,nixpkgs#docker
+          working-directory: test/working-directory
+          script: |
+            pwd
+            cowsay hello
+            command -v docker

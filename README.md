@@ -79,9 +79,13 @@ jobs:
 
 - `interpreter`:  Interpreter to use in the nix shell shebang, defaults to `bash`. (This is passed to `nix run -c`, used to be `-i` in a nix shell shebang)
 
-- `packages`: Comma-separated list of packages to pre-install in your shell. Defaults to just `bash` 
+- `packages`: Comma-separated list of packages to pre-install in your shell. Defaults to just `bash`. Cannot be used together with the `flakes` option.
+
+- `flakes`: Comma-separated list of fully qualified flakes to pre-install in your shell. Use either `packages` or `flakes`. Cannot be used together with the `packages` option.
 
 - `script`: The actual script to execute in your shell. Will be passed to the `interpreter`, which defaults to `bash`
+
+- `working-directory`: Execute the script inside the specified working directory instead of the repository root. Example: `path/to/dir`
 
 ## FAQ: Passing a Github Token against Rate Limits
 
