@@ -39,8 +39,13 @@ function run() {
         const packages = core.getInput('packages');
         const flakes = core.getInput('flakes');
         const script = core.getInput('script');
-        const nixWrapperPath = __nccwpck_require__.ab + "wrapper.sh";
-        const scriptPath = __nccwpck_require__.ab + "script.sh";
+        const workingDirectory = core.getInput('working-directory');
+        const nixWrapperPath = workingDirectory
+            ? `./wrapper.sh`
+            : `${__dirname}/wrapper.sh`;
+        const scriptPath = workingDirectory
+            ? `./script.sh`
+            : `${__dirname}/script.sh`;
         const wrappedPackages = packages
             .split(',')
             .map(pkg => `nixpkgs.${pkg.trim()}`)
@@ -77,9 +82,14 @@ set -euo pipefail
 
 ${script}
    `;
-        (0, fs_1.writeFileSync)(__nccwpck_require__.ab + "wrapper.sh", nixWrapper, { mode: 0o755 });
-        (0, fs_1.writeFileSync)(__nccwpck_require__.ab + "script.sh", wrappedScript, { mode: 0o755 });
-        (0, child_process_1.execFileSync)(__nccwpck_require__.ab + "wrapper.sh", {
+        (0, fs_1.writeFileSync)(`${workingDirectory}/${nixWrapperPath}`, nixWrapper, {
+            mode: 0o755
+        });
+        (0, fs_1.writeFileSync)(`${workingDirectory}/${scriptPath}`, wrappedScript, {
+            mode: 0o755
+        });
+        (0, child_process_1.execFileSync)(nixWrapperPath, {
+            cwd: workingDirectory || undefined,
             stdio: 'inherit',
             shell: 'bash'
         });

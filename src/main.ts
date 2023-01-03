@@ -8,9 +8,14 @@ function run(): void {
     const packages: string = core.getInput('packages')
     const flakes: string = core.getInput('flakes')
     const script: string = core.getInput('script')
+    const workingDirectory: string = core.getInput('working-directory')
 
-    const nixWrapperPath = `${__dirname}/wrapper.sh`
-    const scriptPath = `${__dirname}/script.sh`
+    const nixWrapperPath = workingDirectory
+      ? `./wrapper.sh`
+      : `${__dirname}/wrapper.sh`
+    const scriptPath = workingDirectory
+      ? `./script.sh`
+      : `${__dirname}/script.sh`
 
     const wrappedPackages = packages
       .split(',')
@@ -53,10 +58,15 @@ set -euo pipefail
 ${script}
    `
 
-    writeFileSync(nixWrapperPath, nixWrapper, {mode: 0o755})
-    writeFileSync(scriptPath, wrappedScript, {mode: 0o755})
+    writeFileSync(`${workingDirectory}/${nixWrapperPath}`, nixWrapper, {
+      mode: 0o755
+    })
+    writeFileSync(`${workingDirectory}/${scriptPath}`, wrappedScript, {
+      mode: 0o755
+    })
 
     execFileSync(nixWrapperPath, {
+      cwd: workingDirectory || undefined,
       stdio: 'inherit',
       shell: 'bash'
     })
