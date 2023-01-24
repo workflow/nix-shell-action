@@ -75,6 +75,32 @@ jobs:
             command -v docker
 ```
 
+### Flakes from devShell
+Instead of specifying `flakes`, you can also tell this action to re-use the `buildInputs` from your `devShell` defined in a `flake.nix`, and automatically make these available to the script:
+
+```yaml
+name: "Test with Flakes from DevShell"
+on:
+  pull_request:
+  push:
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Nix
+        uses: cachix/install-nix-action@v18
+        with:
+          extra_nix_config: |
+            access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+      - uses: workflow/nix-shell-action@v3
+        with:
+          flakes-from-devshell: true
+          script: |
+            # Runs hello from a local flake.nix with a `devShell`
+            hello
+```
+
 ## Options `with: ...`
 
 - `interpreter`:  Interpreter to use in the nix shell shebang, defaults to `bash`. (This is passed to `nix run -c`, used to be `-i` in a nix shell shebang)
@@ -82,6 +108,8 @@ jobs:
 - `packages`: Comma-separated list of packages to pre-install in your shell. Cannot be used together with the `flakes` option.
 
 - `flakes`: Comma-separated list of fully qualified flakes to pre-install in your shell. Use either `packages` or `flakes`. Cannot be used together with the `packages` option.
+
+- `flakes-from-devshell`: If true, supply flakes from a `devShell` provided in your repo's `flake.nix`. You cannot currently combined this with the `flakes` option.
 
 - `script`: The actual script to execute in your shell. Will be passed to the `interpreter`, which defaults to `bash`
 
@@ -119,4 +147,4 @@ jobs:
 See https://github.com/actions/typescript-action
 
 [Nix]: https://nixos.org/nix/
-[install-nix-action]: https://github.com/marketplace/actions/install-nix 
+[install-nix-action]: https://github.com/marketplace/actions/install-nix
