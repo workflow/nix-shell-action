@@ -46,7 +46,7 @@ For now, this action implicitly depends on having [Nix] installed and set up cor
 
 See also [cachix-action](https://github.com/cachix/cachix-action) for a simple binary cache setup to speed up your builds and share binaries with developers.
 
-## Use with Flakes
+## Usage with Flakes
 Instead of specifying packages, you can use `flakes` to specify fully qualified flakes to be available in your script.
 This can be used for both local flakes in a `flake.nix` in your repo, as well as external flakes.
 
