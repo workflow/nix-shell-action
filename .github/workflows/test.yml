@@ -124,3 +124,38 @@ jobs:
             pwd
             cowsay hello
             command -v docker
+
+  test-flakes-from-devshell:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Nix
+        uses: cachix/install-nix-action@v18
+        with:
+          extra_nix_config: |
+            access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+      - name: Test Bash Shell with Local and External Flakes
+        uses: ./
+        with:
+          flakes-from-devshell: true
+          script: |
+            pwd
+            figlet "I'm from the devshell, baby."
+
+  test-flakes-from-devshell-in-working-directory:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Nix
+        uses: cachix/install-nix-action@v18
+        with:
+          extra_nix_config: |
+            access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+      - name: Test Bash Shell with Local and External Flakes
+        uses: ./
+        with:
+          working-directory: test/working-directory
+          flakes-from-devshell: true
+          script: |
+            pwd
+            cmatrix
