@@ -75,7 +75,7 @@ jobs:
             command -v docker
 ```
 
-### Flakes from devShell
+## Flakes from devShell
 Instead of specifying `flakes`, you can also tell this action to re-use the `buildInputs` from your `devShell` defined in a `flake.nix`, and automatically make these available to the script:
 
 ```yaml
@@ -109,7 +109,7 @@ jobs:
 
 - `flakes`: Comma-separated list of fully qualified flakes to pre-install in your shell. Use either `packages` or `flakes`. Cannot be used together with the `packages` option.
 
-- `flakes-from-devshell`: If true, supply flakes from a `devShell` provided in your repo's `flake.nix`. You cannot currently combined this with the `flakes` option.
+- `flakes-from-devshell`: If true, supply flakes from a `devShell` provided in your repo's `flake.nix`. You cannot currently combined this with the `flakes` nor `packages` options.
 
 - `script`: The actual script to execute in your shell. Will be passed to the `interpreter`, which defaults to `bash`
 
