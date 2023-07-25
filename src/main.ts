@@ -7,7 +7,7 @@ function run(): void {
     const interpreter: string = core.getInput('interpreter')
     const packages: string = core.getInput('packages')
     const flakes: string = core.getInput('flakes')
-    const flakesFromDevshell: boolean = core.getInput('flakes-from-devshell')
+    const flakesFromDevshell: boolean = core.getBooleanInput('flakes-from-devshell')
     const script: string = core.getInput('script')
     const workingDirectory: string = core.getInput('working-directory')
 
