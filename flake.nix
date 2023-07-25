@@ -7,9 +7,11 @@
 
     packages.x86_64-linux.default = self.packages.x86_64-linux.hello;
 
-    packages.x86_64-linux.devShell = nixpkgs.legacyPackages.x86_64-linux.mkShell {
-      buildInputs = [ self.packages.x86_64-linux.figlet ];
+    devShells.x86_64-linux.named-shell = nixpkgs.legacyPackages.x86_64-linux.mkShell {
+      buildInputs = [ nixpkgs.legacyPackages.x86_64-linux.figlet ];
     };
+
+    devShells.x86_64-linux.default = self.devShells.x86_64-linux.named-shell;
 
   };
 }

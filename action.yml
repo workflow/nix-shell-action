@@ -3,7 +3,7 @@ description: 'Run any command you like in a deterministic nix shell on Linux and
 author: '@workflow'
 inputs:
   interpreter:
-    required: true
+    required: false
     description: 'Interpreter to use in the nix shell shebang'
     default: 'bash'
   packages:
@@ -13,6 +13,11 @@ inputs:
   flakes:
     required: false
     description: 'Comma-separated list of fully qualified flakes to pre-install in your shell. Use either packages or flakes. Cannot be used together with the packages option'
+    default: ''
+  flakes-from-devshell:
+    required: false
+    description: 'If set to true, uses devShell instead.'
+    default: false
   script:
     required: true
     description: 'The actual script to execute in the shell'
