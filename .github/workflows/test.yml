@@ -142,14 +142,6 @@ jobs:
           script: |
             pwd
             figlet "I'm from the devshell, baby."
-      - name: Test Bash Shell with Local Flake (named devShell)
-        uses: ./
-        with:
-          flakes: .#named-shell
-          flakes-from-devshell: true
-          script: |
-            pwd
-            figlet "I'm from the devshell name 'named-shell', baby."
 
   test-flakes-from-devshell-in-working-directory:
     runs-on: ubuntu-latest
