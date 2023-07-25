@@ -24,7 +24,7 @@ function run(): void {
       .join(' ')
 
     const flakeWrappedPackages = flakesFromDevshell
-      ? ''
+      ? flakes
       : flakes.split(',').join(' ') ||
         packages
           .split(',')
