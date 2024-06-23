@@ -21,7 +21,7 @@ jobs:
         with:
           node-version: 20
       - run: |
-          npm install --legacy-peer-deps
+          npm install
       - run: |
           npm run all
   test-latest-nix:
