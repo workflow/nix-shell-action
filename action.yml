@@ -18,6 +18,10 @@ inputs:
     required: false
     description: 'If set to true, uses devShell instead.'
     default: false
+  custom-devshell:
+    required: false
+    description: 'If set, uses a customly named devShell from the current flake'
+    default: ''
   script:
     required: true
     description: 'The actual script to execute in the shell'

@@ -39,6 +39,7 @@ function run() {
         const packages = core.getInput('packages');
         const flakes = core.getInput('flakes');
         const flakesFromDevshell = core.getBooleanInput('flakes-from-devshell');
+        const customDevshell = core.getInput('custom-devshell');
         const script = core.getInput('script');
         const workingDirectory = core.getInput('working-directory');
         const nixWrapperPath = workingDirectory
@@ -58,7 +59,7 @@ function run() {
                     .split(',')
                     .map(pkg => `nixpkgs#${pkg.trim()}`)
                     .join(' ');
-        const nixCommand = flakesFromDevshell ? 'develop' : 'shell';
+        const nixCommand = flakesFromDevshell ? (customDevshell ? `develop .#${customDevshell}` : 'develop') : 'shell';
         const nixWrapper = `
 set -euo pipefail
 
