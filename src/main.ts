@@ -10,6 +10,7 @@ function run(): void {
     const flakesFromDevshell: boolean = core.getBooleanInput(
       'flakes-from-devshell'
     )
+    const customDevshell: string = core.getInput('custom-devshell')
     const script: string = core.getInput('script')
     const workingDirectory: string = core.getInput('working-directory')
 
@@ -33,7 +34,11 @@ function run(): void {
           .map(pkg => `nixpkgs#${pkg.trim()}`)
           .join(' ')
 
-    const nixCommand = flakesFromDevshell ? 'develop' : 'shell'
+    const nixCommand = flakesFromDevshell
+      ? customDevshell
+        ? `develop .#${customDevshell}`
+        : 'develop'
+      : 'shell'
 
     const nixWrapper = `
 set -euo pipefail
