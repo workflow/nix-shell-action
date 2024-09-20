@@ -86,6 +86,23 @@ jobs:
             echo The future is $FUTURE
             [[ -z "${ANSWER}" ]] && exit 1 || exit 0
 
+  test-pure:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Nix
+        uses: cachix/install-nix-action@v27
+        with:
+          extra_nix_config: |
+            access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+      - name: JAVA_HOME should not bleed into the environment
+        uses: ./
+        with:
+          packages: hello
+          script: |
+            hello
+            [[ -z "${JAVA_HOME}" ]] && exit 0 || exit 1
+
   test-flakes:
     runs-on: ubuntu-latest
     steps:
