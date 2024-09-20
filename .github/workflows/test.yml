@@ -95,10 +95,11 @@ jobs:
         with:
           extra_nix_config: |
             access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
-      - name: JAVA_HOME should not bleed into the environment
+      - name: JAVA_HOME should not bleed into the environment in pure mode
         uses: ./
         with:
           packages: hello
+          pure: true
           script: |
             hello
             [[ -z "${JAVA_HOME}" ]] && exit 0 || exit 1
@@ -125,6 +126,24 @@ jobs:
           script: |
             hello
             command -v docker
+
+  test-pure-flakes:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Nix
+        uses: cachix/install-nix-action@v27
+        with:
+          extra_nix_config: |
+            access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+      - name: JAVA_HOME should not bleed into the environment in pure mode
+        uses: ./
+        with:
+          flakes: .#hello
+          pure: true
+          script: |
+            hello
+            [[ -z "${JAVA_HOME}" ]] && exit 0 || exit 1
 
   test-local-flake-in-working-directory:
     runs-on: ubuntu-latest
