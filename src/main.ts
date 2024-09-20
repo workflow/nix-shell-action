@@ -54,7 +54,7 @@ then
   nix run ${wrappedPackages} -c ${interpreter} ${scriptPath}
 else
   # nix 2.4 and later: nix shell
-nix --experimental-features 'nix-command flakes' ${nixCommand} ${flakeWrappedPackages} -c ${interpreter} ${scriptPath}
+nix --experimental-features 'nix-command flakes' ${nixCommand} --ignore-environment ${flakeWrappedPackages} -c ${interpreter} ${scriptPath}
 fi
       `
 
