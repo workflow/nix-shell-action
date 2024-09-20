@@ -1,5 +1,6 @@
 name: 'Nix Shell'
-description: 'Run any command you like in a deterministic nix shell on Linux and macOS'
+description:
+  'Run any command you like in a deterministic nix shell on Linux and macOS'
 author: '@workflow'
 inputs:
   interpreter:
@@ -8,11 +9,16 @@ inputs:
     default: 'bash'
   packages:
     required: false
-    description: 'Comma-separated list of packages to pre-install in your shell. Defaults to simply "bash". Cannot be used together with the flakes option'
+    description:
+      'Comma-separated list of packages to pre-install in your shell. Defaults
+      to simply "bash". Cannot be used together with the flakes option'
     default: 'bash'
   flakes:
     required: false
-    description: 'Comma-separated list of fully qualified flakes to pre-install in your shell. Use either packages or flakes. Cannot be used together with the packages option'
+    description:
+      'Comma-separated list of fully qualified flakes to pre-install in your
+      shell. Use either packages or flakes. Cannot be used together with the
+      packages option'
     default: ''
   flakes-from-devshell:
     required: false
@@ -27,7 +33,9 @@ inputs:
     description: 'The actual script to execute in the shell'
   working-directory:
     required: false
-    description: 'Execute the script inside the specified working directory instead of the repository root. Example: path/to/dir'
+    description:
+      'Execute the script inside the specified working directory instead of the
+      repository root. Example: path/to/dir'
 
 branding:
   color: 'blue'

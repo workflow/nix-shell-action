@@ -1,8 +1,8 @@
 import * as core from '@actions/core'
-import {execFileSync} from 'child_process'
-import {writeFileSync} from 'fs'
+import { execFileSync } from 'child_process'
+import { writeFileSync } from 'fs'
 
-function run(): void {
+export async function run(): Promise<void> {
   try {
     const interpreter: string = core.getInput('interpreter')
     const packages: string = core.getInput('packages')

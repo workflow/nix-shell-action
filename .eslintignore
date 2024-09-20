@@ -1,3 +1,5 @@
-dist/
 lib/
+dist/
 node_modules/
+coverage/
+.devenv/
