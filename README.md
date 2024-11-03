@@ -110,7 +110,7 @@ jobs:
             hello
 ```
 
-## Options `with: ...`
+# Options `with: ...`
 
 - `interpreter`: Interpreter to use in the nix shell shebang, defaults to
   `bash`. (This is passed to `nix run -c`, used to be `-i` in a nix shell
@@ -137,7 +137,9 @@ jobs:
 - `working-directory`: Execute the script inside the specified working directory
   instead of the repository root. Example: `path/to/dir`
 
-## FAQ: Passing a Github Token against Rate Limits
+---
+
+# FAQ: Passing a Github Token against Rate Limits
 
 ```yaml
 name: 'Test'
@@ -162,9 +164,14 @@ jobs:
             docker --help
 ```
 
+# FAQ: How do I pin a specific version of a package?
+
+See
+[This Explanation](https://github.com/workflow/nix-shell-action/issues/346#issuecomment-2440067512)
+
 ---
 
-## Hacking
+# Hacking
 
 See https://github.com/actions/typescript-action
 
