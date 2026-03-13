@@ -10,7 +10,7 @@ on Linux and macOS.
 Create `.github/workflows/test.yml` in your repo with the following contents:
 
 ```yaml
-name: 'Test'
+name: "Test"
 on:
   pull_request:
   push:
@@ -18,8 +18,8 @@ jobs:
   tests:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: cachix/install-nix-action@v18
+      - uses: actions/checkout@v6
+      - uses: cachix/install-nix-action@v30
         with:
           nix_path: nixpkgs=channel:nixos-unstable
       - uses: workflow/nix-shell-action@v3
@@ -57,7 +57,7 @@ flakes to be available in your script. This can be used for both local flakes in
 a `flake.nix` in your repo, as well as external flakes.
 
 ```yaml
-name: 'Test'
+name: "Test"
 on:
   pull_request:
   push:
@@ -65,9 +65,9 @@ jobs:
   tests:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v6
       - name: Install Nix
-        uses: cachix/install-nix-action@v18
+        uses: cachix/install-nix-action@v30
         with:
           extra_nix_config: |
             access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
@@ -88,7 +88,7 @@ Instead of specifying `flakes`, you can also tell this action to re-use the
 make these available to the script:
 
 ```yaml
-name: 'Test with Flakes from DevShell'
+name: "Test with Flakes from DevShell"
 on:
   pull_request:
   push:
@@ -96,9 +96,9 @@ jobs:
   tests:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v6
       - name: Install Nix
-        uses: cachix/install-nix-action@v18
+        uses: cachix/install-nix-action@v30
         with:
           extra_nix_config: |
             access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
@@ -142,7 +142,7 @@ jobs:
 # FAQ: Passing a Github Token against Rate Limits
 
 ```yaml
-name: 'Test'
+name: "Test"
 on:
   pull_request:
   push:
@@ -150,8 +150,8 @@ jobs:
   tests:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: cachix/install-nix-action@v18
+      - uses: actions/checkout@v6
+      - uses: cachix/install-nix-action@v30
         with:
           nix_path: nixpkgs=channel:nixos-unstable
           extra_nix_config: |
@@ -172,6 +172,9 @@ See
 ---
 
 # Hacking
+
+Built with [Rollup](https://rollupjs.org/) (ESM) and TypeScript. Run
+`npm run package` to rebuild `dist/`.
 
 See https://github.com/actions/typescript-action
 

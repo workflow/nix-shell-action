@@ -1,45 +1,44 @@
-name: 'Nix Shell'
-description:
-  'Run any command you like in a deterministic nix shell on Linux and macOS'
-author: '@workflow'
+name: "Nix Shell"
+description: "Run any command you like in a deterministic nix shell on Linux and macOS"
+author: "@workflow"
 inputs:
   interpreter:
     required: false
-    description: 'Interpreter to use in the nix shell shebang'
-    default: 'bash'
+    description: "Interpreter to use in the nix shell shebang"
+    default: "bash"
   packages:
     required: false
     description:
       'Comma-separated list of packages to pre-install in your shell. Defaults
       to simply "bash". Cannot be used together with the flakes option'
-    default: 'bash'
+    default: "bash"
   flakes:
     required: false
     description:
-      'Comma-separated list of fully qualified flakes to pre-install in your
+      "Comma-separated list of fully qualified flakes to pre-install in your
       shell. Use either packages or flakes. Cannot be used together with the
-      packages option'
-    default: ''
+      packages option"
+    default: ""
   flakes-from-devshell:
     required: false
-    description: 'If set to true, uses devShell instead.'
+    description: "If set to true, uses devShell instead."
     default: false
   custom-devshell:
     required: false
-    description: 'If set, uses a customly named devShell from the current flake'
-    default: ''
+    description: "If set, uses a customly named devShell from the current flake"
+    default: ""
   script:
     required: true
-    description: 'The actual script to execute in the shell'
+    description: "The actual script to execute in the shell"
   working-directory:
     required: false
     description:
-      'Execute the script inside the specified working directory instead of the
-      repository root. Example: path/to/dir'
+      "Execute the script inside the specified working directory instead of the
+      repository root. Example: path/to/dir"
 
 branding:
-  color: 'blue'
-  icon: 'chevron-right'
+  color: "blue"
+  icon: "chevron-right"
 runs:
-  using: 'node20'
-  main: 'dist/index.js'
+  using: "node24"
+  main: "dist/index.js"
