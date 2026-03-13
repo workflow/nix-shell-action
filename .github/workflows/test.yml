@@ -1,25 +1,25 @@
-name: 'nix-shell-action-test'
+name: "nix-shell-action-test"
 on: # rebuild any PRs and main branch changes
   pull_request:
   push:
     branches:
       - main
       - support-devshell
-      - 'releases/*'
+      - "releases/*"
 
 jobs:
   build: # make sure build/ci work properly
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Install Nix
         uses: cachix/install-nix-action@v30
         with:
           extra_nix_config: |
             access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
-          node-version: 20
+          node-version-file: .node-version
       - run: |
           npm install
       - run: |
@@ -27,7 +27,7 @@ jobs:
   test-latest-nix:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Install Nix
         uses: cachix/install-nix-action@v30
         with:
@@ -57,7 +57,7 @@ jobs:
   test-legacy-nix:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Install Nix
         uses: cachix/install-nix-action@v30
         with:
@@ -89,7 +89,7 @@ jobs:
   test-flakes:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Install Nix
         uses: cachix/install-nix-action@v30
         with:
@@ -112,7 +112,7 @@ jobs:
   test-local-flake-in-working-directory:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Install Nix
         uses: cachix/install-nix-action@v30
         with:
@@ -131,7 +131,7 @@ jobs:
   test-flakes-from-devshell:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Install Nix
         uses: cachix/install-nix-action@v30
         with:
@@ -148,7 +148,7 @@ jobs:
   test-flakes-from-devshell-with-custom-shell:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Install Nix
         uses: cachix/install-nix-action@v30
         with:
@@ -166,7 +166,7 @@ jobs:
   test-flakes-from-devshell-in-working-directory:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Install Nix
         uses: cachix/install-nix-action@v30
         with:
