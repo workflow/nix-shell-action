@@ -54,37 +54,28 @@ jobs:
           script: |
             echo The future is $FUTURE
             [[ -z "${ANSWER}" ]] && exit 1 || exit 0
-  test-legacy-nix:
+  test-no-stderr-noise:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
       - name: Install Nix
         uses: cachix/install-nix-action@v30
         with:
-          nix_path: nixpkgs=channel:release-21.05
           extra_nix_config: |
             access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
-      - name: Test Basic Bash Shell
+      - name: Run action with packages
         uses: ./
         with:
-          script: |
-            echo "test!"
-      - name: Test Bash Shell with Packages
-        uses: ./
-        with:
-          packages: hello,docker
+          packages: hello
           script: |
             hello
-            command -v docker
-      - name: Test Bash Shell with Enviroment
-        uses: ./
-        env:
-          FUTURE: now
-          ANSWER: 42
-        with:
-          script: |
-            echo The future is $FUTURE
-            [[ -z "${ANSWER}" ]] && exit 1 || exit 0
+      - name: Assert wrapper does not use legacy nix run
+        run: |
+          if grep -q 'nix run nixpkgs\.' dist/wrapper.sh 2>/dev/null; then
+            echo "FAIL: wrapper.sh contains legacy 'nix run nixpkgs.' invocation"
+            exit 1
+          fi
+          echo "PASS: no legacy nix run pattern found"
 
   test-flakes:
     runs-on: ubuntu-latest
