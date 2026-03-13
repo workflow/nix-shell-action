@@ -8,7 +8,6 @@
   # https://devenv.sh/languages/
   languages.javascript = {
     enable = true;
-    package = pkgs.nodejs_21;
     npm = {
       enable = true;
       install.enable = true;
