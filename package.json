@@ -43,7 +43,7 @@
     "@actions/core": "^3.0.0"
   },
   "devDependencies": {
-    "@eslint/compat": "^1.2.8",
+    "@eslint/compat": "^2.0.3",
     "@eslint/eslintrc": "^3.3.1",
     "@eslint/js": "^9.0.0",
     "@github/local-action": "^7.0.1",
